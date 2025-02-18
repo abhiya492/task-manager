@@ -23,6 +23,7 @@ interface TaskSchema {
   description?: string;
   priority?: string;
   category?: string;
+  dueDate?: string | null;
   userId: string;
 }
 
@@ -77,10 +78,15 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json() as TaskSchema;
+
+    // Convert dueDate to a valid date format if it exists
+    const dueDate = body.dueDate ? new Date(body.dueDate).toISOString() : null;
+
     const newTask = await db
       .insert(tasks)
       .values({
         ...body,
+        dueDate,
         userId: session.user.id,
       })
       .returning();
