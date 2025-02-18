@@ -1,4 +1,4 @@
-'//src/components/Tasks/TaskForm.tsx
+//src/components/Tasks/TaskForm.tsx
 
 'use client';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -22,7 +22,7 @@ const taskSchema = z.object({
   description: z.string().optional(),
   priority: z.enum(['low', 'medium', 'high']),
   category: z.enum(['work', 'personal', 'shopping', 'health']),
-  dueDate: z.string().optional()
+  dueDate: z.date().optional()
 });
 
 type FormData = z.infer<typeof taskSchema>;
@@ -47,7 +47,7 @@ export function TaskForm() {
       // Convert date to ISO string for API
       const formattedValues = {
         ...values,
-        dueDate: values.dueDate ? new Date(values.dueDate).toISOString() : undefined,
+        dueDate: values.dueDate ? values.dueDate.toISOString() : undefined,
       };
 
       const response = await fetch('/api/tasks', {
@@ -181,7 +181,7 @@ export function TaskForm() {
                         )}
                       >
                         {field.value ? (
-                          format(new Date(field.value), "PPP")
+                          format(field.value, "PPP")
                         ) : (
                           <span>Pick a date</span>
                         )}
@@ -192,8 +192,8 @@ export function TaskForm() {
                   <PopoverContent className="w-auto p-0" align="start">
                     <Calendar
                       mode="single"
-                      selected={field.value ? new Date(field.value) : undefined}
-                      onSelect={(date) => field.onChange(date ? date.toISOString() : undefined)}
+                      selected={field.value}
+                      onSelect={field.onChange}
                       initialFocus
                     />
                   </PopoverContent>
@@ -212,4 +212,5 @@ export function TaskForm() {
       </Form>
     </div>
   );
-}
+}                  
+
