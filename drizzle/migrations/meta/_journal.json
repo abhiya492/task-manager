@@ -8,6 +8,13 @@
       "when": 1739691616608,
       "tag": "0000_parched_pretty_boy",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1739857004482,
+      "tag": "0001_conscious_earthquake",
+      "breakpoints": true
     }
   ]
 }

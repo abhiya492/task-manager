@@ -1,13 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // src/app/(auth)/signup/page.tsx
 'use client';
-
-import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Loader2 } from 'lucide-react';
+import { useState } from 'react';
 
 export default function SignupPage() {
   const router = useRouter();
@@ -18,58 +18,65 @@ export default function SignupPage() {
     e.preventDefault();
     setIsLoading(true);
     setError('');
-
+  
     const formData = new FormData(e.currentTarget);
-
+    const name = formData.get('name') as string;
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
+  
     try {
       // Step 1: Create user
       const signupResponse = await fetch('/api/auth/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: formData.get('name'),
-          email: formData.get('email'),
-          password: formData.get('password'),
-        }),
+        body: JSON.stringify({ name, email, password }),
       });
-
+  
       if (!signupResponse.ok) {
         const errorData = await signupResponse.json();
         throw new Error(errorData.error || 'Signup failed');
       }
-
-      // Step 2: Automatically log in the user
-      const loginResponse = await signIn('credentials', {
-        email: formData.get('email'),
-        password: formData.get('password'),
+  
+      // Step 2: Sign in the user
+      const result = await signIn('credentials', {
+        email,
+        password,
         redirect: false,
+        callbackUrl: '/dashboard',
       });
-
-      if (loginResponse?.error) {
-        throw new Error(loginResponse.error);
+  
+      if (result?.error) {
+        throw new Error(result.error);
       }
-
+  
       // Step 3: Redirect to dashboard
-      router.push('/dashboard');
+      if (result?.url) {
+        router.push(result.url);
+      } else {
+        router.push('/dashboard');
+      }
+      router.refresh();
     } catch (error: any) {
       setError(error.message || 'An error occurred during signup');
     } finally {
       setIsLoading(false);
     }
   };
+  
+  
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <Card className="w-full max-w-md mx-4">
+    <div className="min-h-screen flex items-center justify-center bg-background">
+      <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-center">Create an Account</CardTitle>
-        </CardHeader>
-        <CardContent>
           {error && (
             <div className="mb-4 p-3 bg-red-100 text-red-600 rounded-md text-sm">
               {error}
             </div>
           )}
+        </CardHeader>
+        <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <label className="text-sm font-medium">Name</label>

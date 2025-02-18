@@ -1,5 +1,4 @@
-//src/components/Dashboard/TaskCalendar.tsx
-
+// src/components/Dashboard/TaskCalendar.tsx
 'use client';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isToday } from 'date-fns';
 import { useQuery } from '@tanstack/react-query';
@@ -8,10 +7,22 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState } from 'react';
 import { Button } from '../ui/button';
 
-const TaskCalendar = () => {
+// Define the Task interface
+interface Task {
+  id: string;
+  title: string;
+  description?: string;
+  dueDate?: string;
+  completed?: boolean;
+  priority?: string;
+  category?: string;
+  userId: string;
+}
+
+export const TaskCalendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   
-  const { data: tasks } = useQuery({
+  const { data: tasks } = useQuery<Task[]>({
     queryKey: ['tasks'],
     queryFn: async () => {
       const res = await fetch('/api/tasks');
@@ -44,15 +55,15 @@ const TaskCalendar = () => {
             </div>
           ))}
           {daysInMonth.map(day => {
-            const dayTasks = tasks?.filter((t: Task) => 
-              new Date(t.dueDate).toDateString() === day.toDateString()
+            const dayTasks = tasks?.filter((task: Task) => 
+              task.dueDate && new Date(task.dueDate).toDateString() === day.toDateString()
             );
             
             return (
               <div key={day.toString()} className={`bg-background p-2 ${isToday(day) ? 'bg-blue-50' : ''}`}>
                 <div className="text-sm font-medium">{format(day, 'd')}</div>
                 <div className="mt-1 space-y-1">
-                  {dayTasks?.map(task => (
+                  {dayTasks?.map((task: Task) => (
                     <div key={task.id} className="text-xs p-1 rounded bg-blue-100">
                       {task.title}
                     </div>
@@ -66,3 +77,5 @@ const TaskCalendar = () => {
     </Card>
   );
 };
+
+export default TaskCalendar;

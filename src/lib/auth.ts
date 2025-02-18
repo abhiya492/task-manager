@@ -10,7 +10,9 @@ import { eq } from "drizzle-orm";
 export const authOptions: NextAuthOptions = {
   adapter: DrizzleAdapter(db),
   session: { strategy: "jwt" },
-  pages: { signIn: "/login" },
+  pages: { signIn: "/login",
+    error: '/api/auth/error',
+   },
   providers: [
     CredentialsProvider({
       name: "credentials",

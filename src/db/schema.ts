@@ -44,4 +44,10 @@ export const relations = {
       relationField: projects.userId,
     },
   },
+  tasks: {
+    user: {
+      references: [users],
+      relationField: tasks.userId,
+    },
+  },
 };
