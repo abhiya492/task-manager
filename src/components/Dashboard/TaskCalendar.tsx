@@ -1,4 +1,3 @@
-// src/components/Dashboard/TaskCalendar.tsx
 'use client';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isToday } from 'date-fns';
 import { useQuery } from '@tanstack/react-query';
@@ -22,10 +21,13 @@ interface Task {
 export const TaskCalendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   
-  const { data: tasks } = useQuery<Task[]>({
+  const { data: tasks, isLoading, isError } = useQuery<Task[]>({
     queryKey: ['tasks'],
     queryFn: async () => {
       const res = await fetch('/api/tasks');
+      if (!res.ok) {
+        throw new Error('Failed to fetch tasks');
+      }
       return res.json();
     }
   });

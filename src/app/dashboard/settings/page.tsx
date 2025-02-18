@@ -1,4 +1,3 @@
-// src/app/dashboard/settings/page.tsx
 'use client';
 
 import { useState } from 'react';
@@ -6,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
-import { ThemeSwitcher } from '@/components/Theme/ThemeSwitcher';
+import { ThemeSwitcher } from '@/components/ui/themeSwitcher';
 
 export default function SettingsPage() {
   const [emailNotifications, setEmailNotifications] = useState(true);
