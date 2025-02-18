@@ -5,12 +5,7 @@ export const taskSchema = z.object({
   description: z.string().optional(),
   priority: z.enum(['low', 'medium', 'high']),
   category: z.enum(['work', 'personal', 'shopping', 'health']),
-  dueDate: z.string().optional().refine((date) => {
-    if (date === null || date === undefined) return true;
-    return !isNaN(Date.parse(date));
-  }, {
-    message: 'Invalid date format',
-  }),
+  dueDate: z.date().optional(),
 });
 
 export const projectSchema = z.object({
