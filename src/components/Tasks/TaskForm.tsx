@@ -1,3 +1,5 @@
+//src/components/Tasks/TaskForm.tsx
+
 'use client';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -5,6 +7,7 @@ import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+//import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const taskSchema = z.object({
   title: z.string().min(1, 'Title is required'),
@@ -25,15 +28,10 @@ export function TaskForm() {
 
   const onSubmit = async (values: z.infer<typeof taskSchema>) => {
     try {
-      const formattedValues = {
-        ...values,
-        dueDate: values.dueDate ? new Date(values.dueDate).toISOString() : null
-      };
-
       const response = await fetch('/api/tasks', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formattedValues)
+        body: JSON.stringify(values)
       });
       
       if (!response.ok) throw new Error('Failed to create task');
@@ -58,54 +56,7 @@ export function TaskForm() {
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Description</FormLabel>
-              <FormControl>
-                <Input placeholder="Task description" {...field} />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="priority"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Priority</FormLabel>
-              <FormControl>
-                <Input placeholder="Task priority" {...field} />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="category"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Category</FormLabel>
-              <FormControl>
-                <Input placeholder="Task category" {...field} />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="dueDate"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Due Date</FormLabel>
-              <FormControl>
-                <Input type="date" placeholder="Task due date" {...field} />
-              </FormControl>
-            </FormItem>
-          )}
-        />
+        {/* Add similar FormFields for other inputs */}
         <Button type="submit">Create Task</Button>
       </form>
     </Form>
