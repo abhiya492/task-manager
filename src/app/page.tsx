@@ -1,4 +1,3 @@
-//src/app/page.tsx
 import React from 'react';
 import Link from 'next/link';
 import { ArrowRight, CheckCircle, Calendar, List, Users } from 'lucide-react';
